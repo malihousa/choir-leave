@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,518 +7,437 @@
 <style>
   :root {
     --primary: #4A90D9;
-    --primary-dark: #357ABD;
-    --danger: #E74C3C;
-    --success: #27AE60;
-    --warning: #F39C12;
-    --bg: #F0F4F8;
-    --card: #FFFFFF;
-    --text: #2C3E50;
-    --muted: #7F8C8D;
-    --border: #DDE3EA;
-    --radius: 14px;
+    --primary-dark: #3574b3;
+    --primary-light: #eaf2fb;
+    --danger: #d9534f;
+    --danger-light: #fdeceb;
+    --success: #2f9e5c;
+    --success-light: #eaf6ec;
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --border: #e1e5ea;
+    --text: #2c3444;
+    --muted: #7a8494;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    margin: 0;
+    font-family: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
     background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 16px 48px;
     color: var(--text);
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
   }
-  .header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .header .icon { font-size: 44px; margin-bottom: 8px; }
-  .header h1 { font-size: 22px; font-weight: 700; }
-  .header p { color: var(--muted); font-size: 14px; margin-top: 4px; }
+  .page { width: 100%; max-width: 520px; }
+  .header { text-align: center; margin-bottom: 20px; }
+  .header .emoji { font-size: 34px; }
+  .header h1 { font-size: 22px; margin: 6px 0 4px; }
+  .header .today { font-size: 13px; color: var(--muted); }
 
   .card {
     background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-    padding: 24px 20px;
-    width: 100%;
-    max-width: 440px;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+    padding: 24px;
   }
 
-  .field { margin-bottom: 20px; }
+  .notice {
+    background: var(--primary-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--primary-dark);
+    margin-bottom: 22px;
+  }
+
   label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px;
   }
-  label .req { color: var(--danger); margin-left: 3px; }
-  label .hint { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
+  label .req { color: var(--danger); }
+  label .opt-hint { font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 4px; }
 
-  input[type="text"], input[type="date"] {
+  .field { margin-bottom: 22px; }
+
+  input[type=text] {
     width: 100%;
     padding: 12px 14px;
-    border: 1.5px solid var(--border);
+    border: 1px solid var(--border);
     border-radius: 10px;
-    font-size: 16px;
-    color: var(--text);
-    background: #FAFBFC;
-    outline: none;
-    transition: border-color 0.2s;
-    -webkit-appearance: none;
-  }
-  input[type="text"]:focus, input[type="date"]:focus {
-    border-color: var(--primary);
+    font-size: 15px;
     background: #fff;
   }
+  input[type=text]:focus { outline: none; border-color: var(--primary); }
 
-  /* 群組選擇 */
-  .radio-group {
+  .option-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 12px;
   }
-  .radio-card {
-    position: relative;
-  }
-  .radio-card input[type="radio"] {
-    position: absolute; opacity: 0; width: 0; height: 0;
-  }
-  .radio-card label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 8px;
-    border: 2px solid var(--border);
+  .option-card {
+    border: 1.5px solid var(--border);
     border-radius: 12px;
+    padding: 18px 8px;
+    text-align: center;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--muted);
-    background: #FAFBFC;
-    transition: all 0.18s;
-    gap: 4px;
-    margin: 0;
+    background: #fff;
+    transition: all .12s;
+    user-select: none;
   }
-  .radio-card label .emoji { font-size: 24px; }
-  .radio-card input[type="radio"]:checked + label {
+  .option-card .icon { font-size: 26px; display: block; margin-bottom: 6px; }
+  .option-card .label { font-size: 15px; font-weight: 600; color: var(--text); }
+  .option-card:hover { border-color: #c3d8ef; }
+  .option-card.selected {
     border-color: var(--primary);
-    background: #EAF3FB;
-    color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(74,144,217,0.15);
   }
+  .option-card.selected .label { color: var(--primary-dark); }
+  .option-card.danger.selected {
+    border-color: var(--danger);
+    background: var(--danger-light);
+    box-shadow: 0 0 0 3px rgba(217,83,79,0.12);
+  }
+  .option-card.danger.selected .label { color: var(--danger); }
 
-  /* 動作選擇 */
-  .action-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+  input[type=date] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px;
+    background: #fff;
+    font-family: inherit;
   }
-  .action-card { position: relative; }
-  .action-card input[type="radio"] {
-    position: absolute; opacity: 0; width: 0; height: 0;
-  }
-  .action-card label {
-    display: flex; flex-direction: column; align-items: center;
-    padding: 14px 8px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 15px; font-weight: 600;
-    color: var(--muted); background: #FAFBFC;
-    transition: all 0.18s;
-    gap: 4px; margin: 0;
-  }
-  .action-card label .emoji { font-size: 22px; }
-  .action-card.leave input[type="radio"]:checked + label {
-    border-color: var(--warning);
-    background: #FEF9EC;
-    color: var(--warning);
-  }
-  .action-card.cancel input[type="radio"]:checked + label {
-    border-color: var(--success);
-    background: #EAFAF1;
-    color: var(--success);
-  }
+  input[type=date]:focus { outline: none; border-color: var(--primary); }
 
-  /* 日期警示 */
-  .date-warn {
-    display: none;
-    align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    padding: 8px 12px;
+  .date-msg {
+    margin-top: 10px;
+    padding: 10px 12px;
     border-radius: 8px;
     font-size: 13px;
-    font-weight: 500;
+    line-height: 1.5;
+    display: none;
   }
-  .date-warn.show { display: flex; }
-  .date-warn.error { background: #FDEDEC; color: var(--danger); }
-  .date-warn.ok { background: #EAFAF1; color: var(--success); }
+  .date-msg.show { display: block; }
+  .date-msg.ok    { background: var(--success-light); color: var(--success); }
+  .date-msg.error { background: var(--danger-light); color: var(--danger); }
+  .date-msg.info  { background: var(--primary-light); color: var(--primary-dark); }
 
-  /* 提交按鈕 */
   .submit-btn {
     width: 100%;
-    padding: 15px;
+    padding: 14px 0;
     border: none;
     border-radius: 12px;
     background: var(--primary);
     color: #fff;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    margin-top: 4px;
-    letter-spacing: 1px;
+    transition: opacity .15s, background .15s;
   }
-  .submit-btn:active { transform: scale(0.98); }
-  .submit-btn:hover { background: var(--primary-dark); }
-  .submit-btn:disabled { background: #BDC3C7; cursor: not-allowed; }
+  .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .submit-btn.danger { background: var(--danger); }
 
-  /* Toast 通知 */
-  .toast {
-    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
-    background: #2C3E50; color: #fff;
-    padding: 13px 24px; border-radius: 40px;
-    font-size: 14px; font-weight: 600;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    opacity: 0; transition: opacity 0.3s;
-    white-space: nowrap; z-index: 999;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; }
-  .toast.success { background: var(--success); }
-  .toast.error { background: var(--danger); }
-
-  /* 送出成功畫面 */
-  .success-screen {
-    display: none;
-    text-align: center;
-    padding: 32px 20px;
-  }
-  .success-screen .big-icon { font-size: 64px; margin-bottom: 12px; }
-  .success-screen h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .success-screen p { color: var(--muted); font-size: 14px; line-height: 1.6; }
-  .back-btn {
-    margin-top: 20px;
+  .spinner {
     display: inline-block;
-    padding: 10px 24px;
-    border: 2px solid var(--primary);
-    border-radius: 40px;
-    color: var(--primary);
-    font-size: 14px; font-weight: 600;
-    cursor: pointer; background: none;
-    transition: all 0.18s;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    margin-right: 6px;
+    vertical-align: -2px;
   }
-  .back-btn:hover { background: var(--primary); color: #fff; }
-
-  .divider {
-    height: 1px; background: var(--border);
-    margin: 20px 0;
-  }
-
-  /* 說明文字 */
-  .tip-box {
-    background: #EBF5FB; border-radius: 10px; padding: 12px 14px;
-    font-size: 13px; color: #2980B9; line-height: 1.7;
-    margin-bottom: 20px;
-  }
-  .tip-box b { font-weight: 700; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="icon">🎵</div>
-  <h1>合唱團請假系統</h1>
-  <p id="today-label">正在讀取日期…</p>
-</div>
-
-<div class="card" id="form-card">
-  <div class="tip-box">
-    📌 <b>請假</b>：選好日期送出即可。<br>
-    🔄 <b>銷假</b>：若之後能出席，再填一次選「銷假」，系統自動取消原請假。
+<div class="page">
+  <div class="header">
+    <div class="emoji">🎵</div>
+    <h1>合唱團請假系統</h1>
+    <div class="today" id="todayBadge">今天是 —</div>
   </div>
 
-  <!-- 姓名 -->
-  <div class="field">
-    <label>姓名<span class="req">*</span></label>
-    <input type="text" id="name" placeholder="請輸入你的姓名" autocomplete="name">
-  </div>
+  <div class="card">
+    <div class="notice">
+      📌 <strong>請假</strong>：選好日期送出即可。<br>
+      🔄 <strong>銷假</strong>：若之後能出席，再填一次選「銷假」，系統會確認原本有請假紀錄才會取消。
+    </div>
 
-  <!-- 所屬團 -->
-  <div class="field">
-    <label>所屬團<span class="req">*</span></label>
-    <div class="radio-group">
-      <div class="radio-card">
-        <input type="radio" name="group" id="g-thu" value="星期四團">
-        <label for="g-thu">
-          <span class="emoji">🗓️</span>
-          星期四團
-        </label>
-      </div>
-      <div class="radio-card">
-        <input type="radio" name="group" id="g-sat" value="星期六團">
-        <label for="g-sat">
-          <span class="emoji">🗓️</span>
-          星期六團
-        </label>
+    <div class="field">
+      <label>姓名 <span class="req">*</span></label>
+      <input type="text" id="nameInput" placeholder="請輸入你的姓名">
+    </div>
+
+    <div class="field">
+      <label>所屬團 <span class="req">*</span></label>
+      <div class="option-grid">
+        <div class="option-card" data-group="星期四團" data-weekday="4">
+          <span class="icon">📅</span>
+          <span class="label">星期四團</span>
+        </div>
+        <div class="option-card" data-group="星期六團" data-weekday="6">
+          <span class="icon">📅</span>
+          <span class="label">星期六團</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- 動作 -->
-  <div class="field">
-    <label>動作<span class="req">*</span></label>
-    <div class="action-group">
-      <div class="action-card leave">
-        <input type="radio" name="action" id="a-leave" value="請假">
-        <label for="a-leave">
-          <span class="emoji">🙏</span>
-          請假
-        </label>
-      </div>
-      <div class="action-card cancel">
-        <input type="radio" name="action" id="a-cancel" value="銷假">
-        <label for="a-cancel">
-          <span class="emoji">✅</span>
-          銷假（取消請假）
-        </label>
+    <div class="field">
+      <label>動作 <span class="req">*</span></label>
+      <div class="option-grid">
+        <div class="option-card" data-action="請假">
+          <span class="icon">🙏</span>
+          <span class="label">請假</span>
+        </div>
+        <div class="option-card danger" data-action="銷假">
+          <span class="icon">✅</span>
+          <span class="label">銷假（取消請假）</span>
+        </div>
       </div>
     </div>
+
+    <div class="field">
+      <label>請假日期 <span class="req">*</span> <span class="opt-hint">限選星期四或星期六</span></label>
+      <input type="date" id="dateInput">
+      <div class="date-msg" id="dateMsg"></div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" disabled>請完成上方欄位</button>
   </div>
-
-  <!-- 日期 -->
-  <div class="field">
-    <label>
-      請假日期<span class="req">*</span>
-      <span class="hint">限選星期四或星期六</span>
-    </label>
-    <input type="date" id="leave-date">
-    <div class="date-warn" id="date-warn"></div>
-  </div>
-
-  <button class="submit-btn" id="submit-btn" onclick="submitForm()">送出</button>
 </div>
-
-<!-- 送出成功畫面 -->
-<div class="card success-screen" id="success-screen">
-  <div class="big-icon" id="success-icon">🎉</div>
-  <h2 id="success-title">請假成功！</h2>
-  <p id="success-msg"></p>
-  <button class="back-btn" onclick="resetForm()">再填一次</button>
-</div>
-
-<div class="toast" id="toast"></div>
 
 <script>
-  // =============================================
-  // ⚠️  設定你的 Google Apps Script Web App 網址
-  // 部署後填入，格式：https://script.google.com/macros/s/AKfycb.../exec
-  // =============================================
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxEQDqzctKhoUzWI6_FpnyUrKVomjsFtEuz5mNMwvjwav34ebHeYgL3DrvOmV0xgahH/exec';
+/**
+ * ★ 部署後，把下面這行換成你的「網頁應用程式網址」
+ * 格式：https://script.google.com/macros/s/xxxxxxxx/exec
+ */
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbz-fYX6Nf6mPuDjzk-C1msvAlgBTketGgslwfIxN9CZzUJ-leDUEpsMOwpr-iOISDGe/exec';
 
-  const WEEKDAY_NAMES = ['日','一','二','三','四','五','六'];
+const WD_NAME = ['日','一','二','三','四','五','六'];
 
-  function getTodayStr() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const d = String(now.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
+const state = {
+  group: null,          // '星期四團' | '星期六團'
+  action: null,          // '請假' | '銷假'
+  dateValid: false,      // 日期是否為星期四／星期六，且與所屬團一致
+  hasLeaveForSelected: null // 銷假模式下，是否查到有效請假紀錄
+};
 
-  function formatDateDisplay(dateStr) {
-    const d = new Date(dateStr + 'T00:00:00');
-    const wd = WEEKDAY_NAMES[d.getDay()];
-    return `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（星期${wd}）`;
-  }
+const $ = (id) => document.getElementById(id);
+const todayBadge = $('todayBadge');
+const nameInput  = $('nameInput');
+const dateInput  = $('dateInput');
+const dateMsg    = $('dateMsg');
+const submitBtn  = $('submitBtn');
+const groupCards = document.querySelectorAll('[data-group]');
+const actionCards = document.querySelectorAll('[data-action]');
 
-  // 初始化：帶入今天日期
-  window.addEventListener('DOMContentLoaded', () => {
-    const today = getTodayStr();
-    const dateInput = document.getElementById('leave-date');
-    dateInput.value = today;
-    dateInput.min = today; // 不能選過去
+/** 顯示今天日期（登入時自動帶入，並預設帶入日期欄位方便使用者微調） */
+function renderToday() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  todayBadge.textContent = `今天是 ${y}年${m}月${d}日（星期${WD_NAME[now.getDay()]}）`;
+  dateInput.value = `${y}-${m}-${d}`;
+}
 
-    const d = new Date(today + 'T00:00:00');
-    const wd = WEEKDAY_NAMES[d.getDay()];
-    document.getElementById('today-label').textContent =
-      `今天是 ${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日（星期${wd}）`;
+function setDateMsg(type, text) {
+  dateMsg.className = 'date-msg show ' + type;
+  dateMsg.textContent = text;
+}
+function clearDateMsg() {
+  dateMsg.className = 'date-msg';
+  dateMsg.textContent = '';
+}
 
-    checkDate(today);
-    dateInput.addEventListener('change', e => checkDate(e.target.value));
+/** 呼叫後端 GET API */
+async function callApi(params) {
+  const url = WEBAPP_URL + '?' + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  return res.json();
+}
+
+/** 卡片選取（所屬團） */
+groupCards.forEach(card => {
+  card.addEventListener('click', () => {
+    groupCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.group = card.dataset.group;
+    validateDate();
   });
+});
 
-  // ---- 星期驗證 ----
-  function getWeekday(dateStr) {
-    return new Date(dateStr + 'T00:00:00').getDay(); // 0=日,1=一,...,4=四,6=六
-  }
-
-  function checkDate(dateStr) {
-    const warn = document.getElementById('date-warn');
-    if (!dateStr) { warn.className = 'date-warn'; return false; }
-    const wd = getWeekday(dateStr);
-    if (wd === 4) {
-      warn.className = 'date-warn show ok';
-      warn.innerHTML = '✅ 星期四，可以請假';
-      return true;
-    } else if (wd === 6) {
-      warn.className = 'date-warn show ok';
-      warn.innerHTML = '✅ 星期六，可以請假';
-      return true;
+/** 卡片選取（動作） */
+actionCards.forEach(card => {
+  card.addEventListener('click', () => {
+    actionCards.forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    state.action = card.dataset.action;
+    submitBtn.classList.toggle('danger', state.action === '銷假');
+    state.hasLeaveForSelected = null;
+    if (state.action === '銷假') {
+      checkCancelEligibility();
     } else {
-      warn.className = 'date-warn show error';
-      warn.innerHTML = `❌ 這天是星期${WEEKDAY_NAMES[wd]}，請只選星期四或星期六`;
-      return false;
+      clearDateMsg();
+      validateDate(true);
+    }
+    refreshSubmitState();
+  });
+});
+
+/**
+ * 驗證日期是否為星期四／星期六，並與所屬團一致。
+ * skipCancelCheck: true 時只做星期驗證，不觸發銷假查詢（例如切到請假模式時）
+ */
+function validateDate(skipCancelCheck) {
+  const val = dateInput.value;
+  if (!val) { state.dateValid = false; clearDateMsg(); refreshSubmitState(); return; }
+
+  const d = new Date(val + 'T00:00:00+08:00');
+  const wd = d.getDay();
+
+  if (wd !== 4 && wd !== 6) {
+    state.dateValid = false;
+    setDateMsg('error', `❌ 星期${WD_NAME[wd]}沒有練習，請選星期四或星期六`);
+    refreshSubmitState();
+    return;
+  }
+
+  const expectedGroup = wd === 4 ? '星期四團' : '星期六團';
+  if (state.group && state.group !== expectedGroup) {
+    state.dateValid = false;
+    setDateMsg('error', `❌ 星期${WD_NAME[wd]}屬於「${expectedGroup}」，與你選的所屬團不符`);
+    refreshSubmitState();
+    return;
+  }
+
+  state.dateValid = true;
+  if (state.action !== '銷假' || skipCancelCheck) {
+    setDateMsg('ok', `✅ 星期${WD_NAME[wd]}，可以${state.action === '銷假' ? '銷假' : '請假'}`);
+  }
+  refreshSubmitState();
+
+  if (state.action === '銷假' && !skipCancelCheck) {
+    checkCancelEligibility();
+  }
+}
+
+/**
+ * ★ 銷假前的必要檢查：
+ * 姓名、所屬團、日期都填妥且日期有效時，先呼叫 checkStatus
+ * 確認資料庫是否存在對應的請假中紀錄。
+ * 查無資料 → 顯示「您目前沒有可銷假的紀錄」並鎖住送出按鈕。
+ */
+async function checkCancelEligibility() {
+  const name = nameInput.value.trim();
+  const date = dateInput.value;
+  if (!name || !state.group || !date || !state.dateValid) {
+    state.hasLeaveForSelected = null;
+    refreshSubmitState();
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '查詢中…';
+  setDateMsg('info', '🔍 查詢請假紀錄中…');
+
+  try {
+    const result = await callApi({ action: 'checkStatus', name, group: state.group, date });
+    if (result.status !== 'ok') throw new Error(result.message || '查詢失敗');
+
+    state.hasLeaveForSelected = result.hasLeave;
+    if (!result.hasLeave) {
+      setDateMsg('error', '❌ 您目前沒有可銷假的紀錄');
+    } else {
+      setDateMsg('ok', `✅ 已找到「${name}」在 ${date} 的請假紀錄，可以送出銷假`);
+    }
+  } catch (err) {
+    state.hasLeaveForSelected = null;
+    setDateMsg('error', '查詢時發生錯誤：' + err.message);
+  }
+  refreshSubmitState();
+}
+
+function refreshSubmitState() {
+  const name = nameInput.value.trim();
+  const ready = name && state.group && state.action && dateInput.value && state.dateValid;
+
+  if (!ready) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = '請完成上方欄位';
+    return;
+  }
+
+  if (state.action === '請假') {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '送出請假';
+  } else {
+    if (state.hasLeaveForSelected === true) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送出銷假';
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.textContent = state.hasLeaveForSelected === false ? '無法銷假' : '尚未確認可銷假';
     }
   }
+}
 
-  // ---- 送出 ----
-  async function submitForm() {
-    const name = document.getElementById('name').value.trim();
-    const group = document.querySelector('input[name="group"]:checked')?.value;
-    const action = document.querySelector('input[name="action"]:checked')?.value;
-    const dateStr = document.getElementById('leave-date').value;
+async function handleSubmit() {
+  const name = nameInput.value.trim();
+  const date = dateInput.value;
+  if (!name || !state.group || !state.action || !date || !state.dateValid) return;
 
-    if (!name) { showToast('請輸入姓名', 'error'); return; }
-    if (!group) { showToast('請選擇所屬團', 'error'); return; }
-    if (!action) { showToast('請選擇請假或銷假', 'error'); return; }
-    if (!dateStr) { showToast('請選擇日期', 'error'); return; }
-    if (!checkDate(dateStr)) { showToast('日期必須是星期四或星期六', 'error'); return; }
+  if (state.action === '銷假' && state.hasLeaveForSelected !== true) {
+    setDateMsg('error', '❌ 您目前沒有可銷假的紀錄');
+    return;
+  }
 
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = '送出中…';
+  submitBtn.disabled = true;
+  const originalText = submitBtn.textContent;
+  submitBtn.innerHTML = '<span class="spinner"></span>送出中…';
 
-    // 若尚未設定 WEBAPP_URL，改用 demo 模式
-    if (WEBAPP_URL === 'YOUR_WEBAPP_URL_HERE') {
-      await new Promise(r => setTimeout(r, 900)); // 模擬延遲
-      showSuccess(name, group, action, dateStr);
-      btn.disabled = false;
-      btn.textContent = '送出';
-      return;
+  try {
+    const result = await callApi({ action: state.action, name, group: state.group, date });
+    if (result.status === 'ok') {
+      setDateMsg('ok', state.action === '請假' ? '🎉 請假成功！' : '🎉 銷假成功！');
+      if (state.action === '銷假') state.hasLeaveForSelected = false;
+    } else {
+      setDateMsg('error', '❌ ' + (result.message || '操作失敗，請稍後再試'));
     }
-
-    try {
-      // Apps Script 不支援自訂 CORS，改用隱藏 iframe + form 送出
-      await new Promise((resolve, reject) => {
-        const iframeName = 'submit_iframe_' + Date.now();
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.name = iframeName;
-        document.body.appendChild(iframe);
-
-        const form = document.createElement('form');
-        form.method = 'GET';
-        form.action = WEBAPP_URL;
-        form.target = iframeName;
-        form.style.display = 'none';
-        [['name', name], ['group', group], ['action', action], ['date', dateStr]].forEach(([k, v]) => {
-          const inp = document.createElement('input');
-          inp.name = k; inp.value = v;
-          form.appendChild(inp);
-        });
-        document.body.appendChild(form);
-
-        let done = false;
-        const cleanup = () => {
-          try { document.body.removeChild(form); } catch(e){}
-          try { document.body.removeChild(iframe); } catch(e){}
-        };
-
-        iframe.onload = () => {
-          if (done) return; done = true;
-          try {
-            const text = iframe.contentDocument?.body?.innerText || '';
-            const json = JSON.parse(text);
-            cleanup();
-            if (json.status === 'ok') resolve();
-            else reject(new Error(json.message || '送出失敗'));
-          } catch(e) {
-            cleanup();
-            resolve(); // 跨域無法讀取內容，資料已送出視為成功
-          }
-        };
-
-        setTimeout(() => {
-          if (done) return; done = true;
-          cleanup();
-          resolve(); // 8秒逾時仍視為成功
-        }, 8000);
-
-        form.submit();
-      });
-
-      clearError();
-      showSuccess(name, group, action, dateStr);
-
-    } catch (err) {
-      showError(err.message || '送出失敗，請稍後再試');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '送出';
-    }
+  } catch (err) {
+    setDateMsg('error', '連線發生錯誤：' + err.message);
   }
 
-  function showSuccess(name, group, action, dateStr) {
-    document.getElementById('form-card').style.display = 'none';
-    const screen = document.getElementById('success-screen');
-    screen.style.display = 'block';
+  submitBtn.textContent = originalText;
+  refreshSubmitState();
+}
 
-    const isLeave = action === '請假';
-    document.getElementById('success-icon').textContent = isLeave ? '🙏' : '🎉';
-    document.getElementById('success-title').textContent = isLeave ? '請假成功！' : '銷假成功！';
-    document.getElementById('success-msg').innerHTML =
-      `<b>${name}</b>（${group}）<br>${formatDateDisplay(dateStr)}<br><br>` +
-      (isLeave
-        ? '已記錄你的請假，如有變動可再次填表選「銷假」取消。'
-        : '已取消原本的請假紀錄，期待你的出席！🎵');
+// ===== 事件綁定 =====
+nameInput.addEventListener('input', () => {
+  if (state.action === '銷假') {
+    state.hasLeaveForSelected = null;
+    checkCancelEligibility();
+  } else {
+    refreshSubmitState();
   }
+});
+dateInput.addEventListener('change', () => validateDate());
+submitBtn.addEventListener('click', handleSubmit);
 
-  function resetForm() {
-    clearError();
-    document.getElementById('success-screen').style.display = 'none';
-    document.getElementById('form-card').style.display = 'block';
-    document.getElementById('name').value = '';
-    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-    const today = getTodayStr();
-    document.getElementById('leave-date').value = today;
-    checkDate(today);
-  }
-
-  function showToast(msg, type = '') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'toast show' + (type ? ' ' + type : '');
-    const duration = type === 'error' ? 4000 : 2800;
-    setTimeout(() => { t.className = 'toast'; }, duration);
-  }
-
-  // 銷假查無紀錄等較長的錯誤，用頁面內嵌區塊顯示（不會消失）
-  function showError(msg) {
-    let box = document.getElementById('error-box');
-    if (!box) {
-      box = document.createElement('div');
-      box.id = 'error-box';
-      box.style.cssText = `
-        background:#FDEDEC; border:1.5px solid #E74C3C; border-radius:10px;
-        padding:14px 16px; margin-top:16px; color:#C0392B;
-        font-size:14px; line-height:1.7; white-space:pre-line;
-      `;
-      document.getElementById('submit-btn').insertAdjacentElement('afterend', box);
-    }
-    box.innerHTML = '❌ ' + msg.replace(/\n/g, '<br>');
-    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // 送出成功時清掉錯誤框
-  function clearError() {
-    const box = document.getElementById('error-box');
-    if (box) box.remove();
-  }
+// ===== 初始化 =====
+renderToday();
+validateDate(true);
+refreshSubmitState();
 </script>
 </body>
 </html>

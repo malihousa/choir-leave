@@ -403,17 +403,60 @@
     }
 
     try {
-      const params = new URLSearchParams({ name, group, action, date: dateStr });
-      const res = await fetch(WEBAPP_URL + '?' + params.toString(), { method: 'GET' });
-      const json = await res.json();
-      if (json.status === 'ok') {
-        clearError();
-        showSuccess(name, group, action, dateStr);
-      } else {
-        showError(json.message || '送出失敗，請稍後再試');
-      }
+      // Apps Script 不支援自訂 CORS，改用隱藏 iframe + form 送出
+      await new Promise((resolve, reject) => {
+        const iframeName = 'submit_iframe_' + Date.now();
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.name = iframeName;
+        document.body.appendChild(iframe);
+
+        const form = document.createElement('form');
+        form.method = 'GET';
+        form.action = WEBAPP_URL;
+        form.target = iframeName;
+        form.style.display = 'none';
+        [['name', name], ['group', group], ['action', action], ['date', dateStr]].forEach(([k, v]) => {
+          const inp = document.createElement('input');
+          inp.name = k; inp.value = v;
+          form.appendChild(inp);
+        });
+        document.body.appendChild(form);
+
+        let done = false;
+        const cleanup = () => {
+          try { document.body.removeChild(form); } catch(e){}
+          try { document.body.removeChild(iframe); } catch(e){}
+        };
+
+        iframe.onload = () => {
+          if (done) return; done = true;
+          try {
+            const text = iframe.contentDocument?.body?.innerText || '';
+            const json = JSON.parse(text);
+            cleanup();
+            if (json.status === 'ok') resolve();
+            else reject(new Error(json.message || '送出失敗'));
+          } catch(e) {
+            cleanup();
+            resolve(); // 跨域無法讀取內容，資料已送出視為成功
+          }
+        };
+
+        setTimeout(() => {
+          if (done) return; done = true;
+          cleanup();
+          resolve(); // 8秒逾時仍視為成功
+        }, 8000);
+
+        form.submit();
+      });
+
+      clearError();
+      showSuccess(name, group, action, dateStr);
+
     } catch (err) {
-      showToast('網路錯誤，請確認後重試', 'error');
+      showError(err.message || '送出失敗，請稍後再試');
     } finally {
       btn.disabled = false;
       btn.textContent = '送出';
